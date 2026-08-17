@@ -47,7 +47,7 @@
 class Pipe
 {
 private:
-	HANDLE hPipe;
+	HANDLE hPipe = INVALID_HANDLE_VALUE;
 	LPTSTR  strPipeName;
 
 public:
@@ -58,6 +58,9 @@ public:
 		strPipeName = (LPTSTR)TEXT("\\\\.\\pipe\\chessPipe");
 
 	}
+	Pipe(const Pipe&) = delete;
+	Pipe& operator=(const Pipe&) = delete;
+	~Pipe() { close(); }
 
 	bool connect()
 	{
@@ -86,15 +89,24 @@ public:
 			return false;
 		}
 
+		hPipe = CreateFile(strPipeName, GENERIC_READ | GENERIC_WRITE, 0, NULL,
+			OPEN_EXISTING, 0, NULL);
+		if (hPipe == INVALID_HANDLE_VALUE)
+		{
+			_tprintf(_T("Unable to open named pipe %s w/err 0x%08lx\n"),
+				strPipeName, GetLastError());
+			return false;
+		}
+
 		_tprintf(_T("The named pipe, %s, is connected.\n"), strPipeName);
 		return true;
 
 	}
 
-	bool sendMessageToGraphics(char* msg)
+	bool sendMessageToGraphics(const char* msg)
 	{
 		//char ea[] = "SSS";
-		char* chRequest = msg;	// Client -> Server
+		const char* chRequest = msg;	// Client -> Server
 		DWORD cbBytesWritten, cbRequestBytes;
 
 		// Send one message to the pipe.
@@ -142,6 +154,8 @@ public:
 
 		_tprintf(_T("Receives %ld bytes; Message: \"%s\"\n"),
 			cbBytesRead, chReply);
+		const DWORD charsRead = cbBytesRead / sizeof(TCHAR);
+		chReply[charsRead < BUFFER_SIZE ? charsRead : BUFFER_SIZE - 1] = '\0';
 		std::string s = chReply;
 		return s;
 
@@ -149,7 +163,10 @@ public:
 
 	void close()
 	{
-		CloseHandle(hPipe);
+		if (hPipe != INVALID_HANDLE_VALUE) {
+			CloseHandle(hPipe);
+			hPipe = INVALID_HANDLE_VALUE;
+		}
 	}
 
 

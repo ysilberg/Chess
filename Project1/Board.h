@@ -1,37 +1,34 @@
 #pragma once
-#include <string>
-#include <vector>
-#include <iostream>
-#include "Piece.h"
 #include "MoveException.h"
-#define CHESS_SIZE 8
+#include "Piece.h"
+#include <array>
+#include <iosfwd>
+#include <memory>
+#include <string>
 
-
-#define ROOK 'r'
-#define KNIGHT 'n'
-#define BISHOP 'b'
-#define QUEEN 'q'
-#define KING 'k'
-#define PWN 'p'
-#define EMPTY '#'
-
-
-class Board
-{
+class Board {
 public:
-    
-    Board(const std::string& boardData);
-    ~Board();    
-    const std::vector<std::vector<Piece*>>& getBoard() const;
-    Piece* getSymbol(std::string& pos) const;
-    void setBoard(const std::string& boardData);
+    explicit Board(const std::string& boardData);
+    Board(const Board&) = delete;
+    Board& operator=(const Board&) = delete;
+    Board(Board&&) noexcept = default;
+    Board& operator=(Board&&) noexcept = default;
+
+    const Piece* getSymbol(const std::string& position) const;
+    Piece* getSymbol(const std::string& position);
     std::string toString() const;
-    void movePiece(const std::string& from, const std::string& to,bool god); 
-    bool isPathClear(const int fromRow, const int fromCol, const int toRow, const int toCol, const std::string& pieceType) const;
+    bool whiteToMove() const noexcept { return _whiteTurn; }
+    Status movePiece(const std::string& from, const std::string& to);
+    bool isCheck(char color) const;
     friend std::ostream& operator<<(std::ostream& os, const Board& board);
-    bool isStraightPathClear(const int fromRow, const int fromCol, const int toRow, const int toCol) const;
-    bool isDiagonalPathClear(const int fromRow, const int fromCol, const int toRow, const int toCol) const;
+
 private:
-    std::vector<std::vector<Piece*>> _board;
-    bool _whiteTurn;
+    using Square = std::unique_ptr<Piece>;
+    std::array<std::array<Square, CHESS_SIZE>, CHESS_SIZE> _board{};
+    bool _whiteTurn = true;
+
+    static std::pair<int,int> indices(const std::string& position);
+    bool isPathClear(int fromRow, int fromCol, int toRow, int toCol) const;
+    bool isPseudoLegal(const Piece& piece, int toRow, int toCol, bool capture) const;
+    bool isSquareAttacked(int row, int col, char byColor) const;
 };

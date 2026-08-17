@@ -10,20 +10,17 @@
 
 #include "MoveException.h"
 
-#define BOARD_LETTERS "rnbkqbnrpppppppp################################PPPPPPPPRNBKQBNR0"
+#define BOARD_LETTERS "rnbqkbnrpppppppp################################PPPPPPPPRNBQKBNR0"
 #define UNCONCTION "0"
 #define WAIT_TIME 5000
-#define BUFFER_SIZE 1024
 
 using std::cout;
 using std::endl;
 using std::string;
 
 int main() {
-    srand(time_t(NULL));
     Pipe p;
     bool isConnect = p.connect();
-    char msgToGraphics[BUFFER_SIZE];
     string ans;
     std::string strBoard = BOARD_LETTERS;
     while (!isConnect) 
@@ -49,7 +46,7 @@ int main() {
         std::cout << "Size of chessboard: " << strBoard.size() << std::endl;
         // Initialize the board
         Manager man(p,strBoard);
-        man.gameLoop(strBoard);
+        man.gameLoop();
     }
     catch (std::exception& e) 
     {
