@@ -27,6 +27,8 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Configure MSBuild
+        uses: microsoft/setup-msbuild@v2
       - name: Configure CMake
         run: cmake -S . -B build -A x64 -DCHESS_WARNINGS_AS_ERRORS=ON
       - name: Build core, tests, and Windows app
