@@ -102,6 +102,47 @@ bool Board::isCheck(char color) const {
     throw std::logic_error("Board does not contain the requested king.");
 }
 
+bool Board::isLegalMove(int fr, int fc, int tr, int tc, char color) {
+    Piece* piece = _board[fr][fc].get();
+    if (!piece || piece->getColor() != color || (fr == tr && fc == tc)) return false;
+    if (_board[tr][tc] && _board[tr][tc]->getColor() == color) return false;
+    if (_board[tr][tc] && _board[tr][tc]->getType() == "King") return false;
+    if (!isPseudoLegal(*piece, tr, tc, _board[tr][tc] != nullptr)) return false;
+
+    const std::string from = piece->getPosition();
+    const std::string to{static_cast<char>('a' + tc), static_cast<char>('1' + tr)};
+    Square captured = std::move(_board[tr][tc]);
+    _board[tr][tc] = std::move(_board[fr][fc]);
+    _board[tr][tc]->setPosition(to);
+    const bool legal = !isCheck(color);
+    _board[fr][fc] = std::move(_board[tr][tc]);
+    _board[fr][fc]->setPosition(from);
+    _board[tr][tc] = std::move(captured);
+    return legal;
+}
+
+bool Board::hasLegalMove(char color) {
+    for (int fr = 0; fr < CHESS_SIZE; ++fr) {
+        for (int fc = 0; fc < CHESS_SIZE; ++fc) {
+            if (!_board[fr][fc] || _board[fr][fc]->getColor() != color) continue;
+            for (int tr = 0; tr < CHESS_SIZE; ++tr) {
+                for (int tc = 0; tc < CHESS_SIZE; ++tc) {
+                    if (isLegalMove(fr, fc, tr, tc, color)) return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+bool Board::isCheckmate(char color) {
+    return isCheck(color) && !hasLegalMove(color);
+}
+
+bool Board::isStalemate(char color) {
+    return !isCheck(color) && !hasLegalMove(color);
+}
+
 Status Board::movePiece(const std::string& from, const std::string& to) {
     const auto [fr,fc]=indices(from); const auto [tr,tc]=indices(to);
     if (fr==tr&&fc==tc) throw MoveException(MOVE_INVALID_IDENTICAL_SQUARES);
@@ -123,7 +164,15 @@ Status Board::movePiece(const std::string& from, const std::string& to) {
         throw MoveException(MOVE_INVALID_CAUSES_SELF_CHECK);
     }
     _whiteTurn=!_whiteTurn;
-    return isCheck(movingColor==WHITE?BLACK:WHITE) ? MOVE_VALID_CHECK : MOVE_VALID;
+    const char opponentColor = movingColor == WHITE ? BLACK : WHITE;
+    const bool opponentInCheck = isCheck(opponentColor);
+    const bool opponentHasMove = hasLegalMove(opponentColor);
+    if (!opponentHasMove) {
+        _gameState = opponentInCheck ? GameState::Checkmate : GameState::Stalemate;
+        return opponentInCheck ? MOVE_VALID_CHECKMATE : MOVE_VALID;
+    }
+    _gameState = opponentInCheck ? GameState::Check : GameState::Ongoing;
+    return opponentInCheck ? MOVE_VALID_CHECK : MOVE_VALID;
 }
 
 std::ostream& operator<<(std::ostream& os, const Board& board) {

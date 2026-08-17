@@ -1,8 +1,4 @@
-#ifndef QUEEN_H
-#define QUEEN_H
-
-#include <stdexcept>
-
+#pragma once
 #include "Piece.h"
 
 class Queen : public Piece {
@@ -13,8 +9,4 @@ public:
 
     bool canMove(const std::string& newPosition) const override;
     std::string getType() const override;
-
-
 };
-
-#endif // QUEEN_H

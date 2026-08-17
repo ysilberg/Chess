@@ -1,8 +1,4 @@
-#ifndef KNIGHT_H
-#define KNIGHT_H
-
-#include <stdexcept>
-
+#pragma once
 #include "Piece.h"
 
 class Knight : public Piece {
@@ -13,7 +9,4 @@ public:
 
     bool canMove(const std::string& newPosition) const override;
     std::string getType() const override;
-
 };
-
-#endif // KNIGHT_H

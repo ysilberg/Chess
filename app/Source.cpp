@@ -1,17 +1,12 @@
 #include "Pipe.h"
-#include "chess/Board.h"
 #include "Manager.h"
-#include "chess/Piece.h"
-#include <iostream>
-#include <thread>
-#include <string>
 #include <chrono>
-#include <stdexcept>
-
-#include "chess/MoveException.h"
+#include <iostream>
+#include <string>
+#include <thread>
 
 #define BOARD_LETTERS "rnbqkbnrpppppppp################################PPPPPPPPRNBQKBNR0"
-#define UNCONCTION "0"
+#define RETRY_CONNECTION "0"
 #define WAIT_TIME 5000
 
 using std::cout;
@@ -29,7 +24,7 @@ int main() {
         cout << "Do you want to try again or exit? (0-try again, 1-exit)" << endl;
         std::cin >> ans;
 
-        if (ans == UNCONCTION)
+        if (ans == RETRY_CONNECTION)
         {
             cout << "Trying to connect again..." << endl;
             std::this_thread::sleep_for(std::chrono::milliseconds(WAIT_TIME));

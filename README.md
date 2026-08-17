@@ -1,5 +1,7 @@
 # Chess Project Magshimim
 
+[![CI](https://github.com/NRG-Wardog/Chess/actions/workflows/ci.yml/badge.svg)](https://github.com/NRG-Wardog/Chess/actions/workflows/ci.yml)
+
 A two-player C++ chess engine that validates moves and communicates with a supplied Windows GUI over a named pipe. The project was collaboratively developed by **Dorian Salomon and Yan Silberg** as part of the Magshimim program.
 
 This repository appears on GitHub as a fork because the original collaborative repository was hosted under Yan's account. It is not a third-party project: this repository preserves work created jointly by Dorian and Yan.
@@ -12,11 +14,12 @@ The engine currently supports:
 - turn enforcement, captures, friendly-piece collision checks, and obstruction checks for sliding pieces;
 - pawn single moves, initial two-square moves, and diagonal captures;
 - check detection and rejection of moves that leave the moving side's king in check;
+- legal-move search with checkmate and stalemate detection;
 - deterministic board serialization compatible with the GUI's 65-character protocol;
 - protocol status codes for accepted moves, check, and invalid-move categories;
 - Windows named-pipe communication with the included GUI executable.
 
-The engine detects **check**, but it does not yet determine checkmate or stalemate. Castling, en passant, promotion, draw rules, move history, undo, clocks, and AI are also not implemented.
+The engine detects **check, checkmate, and stalemate**. Castling, en passant, promotion, repetition and other draw rules, move history, undo, clocks, and AI are not implemented.
 
 ## Architecture
 
@@ -24,7 +27,7 @@ The code is divided into a platform-independent chess core and a thin Windows in
 
 | Component | Responsibility |
 | --- | --- |
-| `Board` | Owns pieces, parses and serializes positions, validates board-dependent rules, applies moves transactionally, enforces turns, and detects check. |
+| `Board` | Owns pieces, parses and serializes positions, validates board-dependent rules, applies moves transactionally, enforces turns, and detects check, checkmate, and stalemate. |
 | `Piece` | Abstract base class containing color and position state plus the movement interface. |
 | Piece subclasses | Implement movement geometry for each piece type. Board-dependent concerns such as obstruction and occupancy stay in `Board`. |
 | `Manager` | Translates four-character GUI requests into board operations and sends protocol status codes back to the GUI. |
@@ -50,13 +53,14 @@ The GUI sends coordinate moves as four characters: source square followed by des
 | `6` | Illegal movement or blocked path |
 | `7` | Source and destination are identical |
 | `8` | Wrong side attempted to move |
+| `9` | Legal move that gives checkmate |
 
-Code `9` is reserved by the original protocol, but the current engine does not produce it because checkmate detection is not implemented.
+The original protocol has no separate stalemate status code. A move that causes stalemate therefore returns the normal legal-move code (`0`), while the engine records `GameState::Stalemate` and ends the game loop. The GUI may require a future protocol extension to display a dedicated stalemate message.
 
 ## Repository layout
 
 ```text
-Chess-Project-Magshimim/
+Chess/
 ├── app/                    # Windows entry point, controller, and named-pipe adapter
 ├── include/chess/          # public chess-core headers
 ├── src/                    # platform-independent chess-core implementation
@@ -75,9 +79,9 @@ The chess rules are isolated from the Windows integration. Consumers include hea
 
 The core and test suite require a C++17 compiler and CMake 3.16 or newer. They are platform-independent.
 
-```powershell
-git clone https://github.com/NRG-Wardog/Chess-Project-Magshimim.git
-cd Chess-Project-Magshimim
+```bash
+git clone https://github.com/NRG-Wardog/Chess.git
+cd Chess
 cmake -S . -B build
 cmake --build build --config Release
 ctest --test-dir build -C Release --output-on-failure
@@ -101,30 +105,38 @@ Requirements:
 
 The portable CMake build creates `chess_app` only on Windows. The GUI executable is prebuilt and is not compiled from source in this repository.
 
+## Continuous integration
+
+GitHub Actions validates both supported build paths on every pull request and push to `main`:
+
+- **Linux / GCC:** configures the portable CMake project with C++17 and warnings as errors, builds the core and tests, then runs `ctest`.
+- **Windows / MSVC:** builds the core tests and Windows IPC application through CMake with warnings as errors, runs `ctest`, and separately builds `visualstudio/Chess.sln` to catch stale Visual Studio metadata.
+
+CI compiles the Windows pipe client but does not launch the supplied GUI. A full named-pipe handshake and interactive game still require manual validation on Windows.
+
 ## Error handling
 
 Expected move failures use `MoveException` so the controller can return the exact GUI status code. Malformed board data and impossible engine states use standard exceptions. Pipe operations report Win32 failures and return failure values; the startup path allows a connection retry.
 
 ## Tests
 
-`tests/test_chess.cpp` covers every piece's movement geometry, bounds checking, turn order, captures, friendly occupancy, sliding-piece obstruction, pawn occupancy rules, check detection, checking-move status, king safety, self-check prevention, and transactional rollback after a rejected move.
+`tests/test_chess.cpp` covers every piece's movement geometry, board parsing and serialization, malformed input, bounds checking, turn order and preservation, captures, friendly occupancy, sliding-piece obstruction, knight jumps, white and black pawn rules, check detection from multiple piece types, escaping check, checkmate, stalemate, king safety, self-check prevention, and transactional rollback of both quiet moves and captures.
 
 ## Known limitations
 
-- Checkmate and stalemate are not detected, so the engine does not terminate a completed game automatically.
 - Castling, en passant, and pawn promotion are unsupported.
 - Threefold repetition, the fifty-move rule, and insufficient-material draws are unsupported.
+- The legacy GUI protocol has no dedicated stalemate response code; the engine terminates correctly, but the GUI may only observe a normal legal-move response.
 - The GUI/IPC path is Windows-only and synchronous.
 - The bundled GUI has no source code here and must be validated manually on Windows.
 - The board interchange format does not validate whether an imported position is a reachable or otherwise legal chess position.
 
 ## Future improvements
 
-1. Add legal-move generation, then implement checkmate and stalemate from that shared primitive.
-2. Add explicit move history to support castling, en passant, promotion, undo, and draw rules.
+1. Add explicit move history to support castling, en passant, promotion, undo, and draw rules.
+2. Extend the GUI protocol with a dedicated stalemate result.
 3. Replace protocol exceptions with a typed move result internally while keeping the numeric adapter at the IPC boundary.
-4. Wrap the Win32 pipe in a smaller transport interface so `Manager` can be integration-tested with a fake connection.
-5. Add Windows CI for the Visual Studio target and portable CI for the chess-core tests.
+4. Add a mockable transport interface and integration tests for `Manager` without requiring the GUI process.
 
 ## License
 

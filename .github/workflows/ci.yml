@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    name: Linux / GCC
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCHESS_WARNINGS_AS_ERRORS=ON
+      - name: Build
+        run: cmake --build build --parallel
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+  windows:
+    name: Windows / MSVC
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure MSBuild
+        uses: microsoft/setup-msbuild@v2
+      - name: Configure CMake
+        run: cmake -S . -B build -A x64 -DCHESS_WARNINGS_AS_ERRORS=ON
+      - name: Build core, tests, and Windows app
+        run: cmake --build build --config Release --parallel
+      - name: Run core tests
+        run: ctest --test-dir build -C Release --output-on-failure
+      - name: Validate Visual Studio solution
+        run: msbuild visualstudio/Chess.sln /m /p:Configuration=Release /p:Platform=x64 /warnAsError

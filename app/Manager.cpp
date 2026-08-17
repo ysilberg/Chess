@@ -1,6 +1,5 @@
 #include "Manager.h"
 #include "chess/MoveException.h"
-#include <cstring>
 #include <iostream>
 
 Manager::Manager(Pipe& pipe, const std::string& boardData) : _pipe(pipe), _board(boardData) {}
@@ -23,5 +22,8 @@ void Manager::gameLoop() {
         const std::string code=std::to_string(static_cast<int>(response));
         _pipe.sendMessageToGraphics(code.c_str());
         displayBoard();
+        if (_board.gameState() == GameState::Checkmate || _board.gameState() == GameState::Stalemate) {
+            break;
+        }
     }
 }
