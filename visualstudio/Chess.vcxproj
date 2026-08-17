@@ -22,7 +22,7 @@
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{c149bde1-4f6a-4425-a140-f61fd8456437}</ProjectGuid>
-    <RootNamespace>Project1</RootNamespace>
+    <RootNamespace>Chess</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -77,6 +77,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\include;..\app;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -92,6 +93,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\include;..\app;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -107,6 +109,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\include;..\app;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -122,6 +125,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\include;..\app;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,30 +135,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Bishop.h" />
-    <ClInclude Include="Board.h" />
-    <ClInclude Include="King.h" />
-    <ClInclude Include="Knight.h" />
-    <ClInclude Include="Manager.h" />
-    <ClInclude Include="MoveException.h" />
-    <ClInclude Include="Piece.h" />
-    <ClInclude Include="Pipe.h" />
-    <ClInclude Include="Pwn.h" />
-    <ClInclude Include="Queen.h" />
-    <ClInclude Include="Rook.h" />
-    <ClInclude Include="targetver.h" />
+    <ClInclude Include="..\include\chess\Bishop.h" />
+    <ClInclude Include="..\include\chess\Board.h" />
+    <ClInclude Include="..\include\chess\King.h" />
+    <ClInclude Include="..\include\chess\Knight.h" />
+    <ClInclude Include="..\include\chess\MoveException.h" />
+    <ClInclude Include="..\include\chess\Piece.h" />
+    <ClInclude Include="..\include\chess\Pawn.h" />
+    <ClInclude Include="..\include\chess\Queen.h" />
+    <ClInclude Include="..\include\chess\Rook.h" />
+    <ClInclude Include="..\app\Manager.h" />
+    <ClInclude Include="..\app\Pipe.h" />
+    <ClInclude Include="..\app\targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Bishop.cpp" />
-    <ClCompile Include="Board.cpp" />
-    <ClCompile Include="King.cpp" />
-    <ClCompile Include="Knight.cpp" />
-    <ClCompile Include="Manager.cpp" />
-    <ClCompile Include="Piece.cpp" />
-    <ClCompile Include="Pwn.cpp" />
-    <ClCompile Include="Queen.cpp" />
-    <ClCompile Include="Rook.cpp" />
-    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="..\src\Bishop.cpp" />
+    <ClCompile Include="..\src\Board.cpp" />
+    <ClCompile Include="..\src\King.cpp" />
+    <ClCompile Include="..\src\Knight.cpp" />
+    <ClCompile Include="..\src\Piece.cpp" />
+    <ClCompile Include="..\src\Pawn.cpp" />
+    <ClCompile Include="..\src\Queen.cpp" />
+    <ClCompile Include="..\src\Rook.cpp" />
+    <ClCompile Include="..\app\Manager.cpp" />
+    <ClCompile Include="..\app\Source.cpp" />
+    <ClCompile Include="..\app\stdafx.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

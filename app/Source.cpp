@@ -1,14 +1,14 @@
 #include "Pipe.h"
-#include "Board.h"
+#include "chess/Board.h"
 #include "Manager.h"
-#include "Piece.h"
+#include "chess/Piece.h"
 #include <iostream>
 #include <thread>
 #include <string>
 #include <chrono>
 #include <stdexcept>
 
-#include "MoveException.h"
+#include "chess/MoveException.h"
 
 #define BOARD_LETTERS "rnbqkbnrpppppppp################################PPPPPPPPRNBQKBNR0"
 #define UNCONCTION "0"

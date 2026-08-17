@@ -1,10 +1,10 @@
-#include "Bishop.h"
-#include "Board.h"
-#include "King.h"
-#include "Knight.h"
-#include "Pwn.h"
-#include "Queen.h"
-#include "Rook.h"
+#include "chess/Bishop.h"
+#include "chess/Board.h"
+#include "chess/King.h"
+#include "chess/Knight.h"
+#include "chess/Pawn.h"
+#include "chess/Queen.h"
+#include "chess/Rook.h"
 #include <functional>
 #include <iostream>
 #include <map>
@@ -33,7 +33,7 @@ int main() {
     Knight knight(WHITE,"d4"); check(knight.canMove("f5")&&!knight.canMove("f6"),"knight geometry");
     Queen queen(WHITE,"d4"); check(queen.canMove("h8")&&queen.canMove("a4")&&!queen.canMove("f5"),"queen geometry");
     King king(WHITE,"d4"); check(king.canMove("e5")&&!king.canMove("f4")&&!king.canMove("d4"),"king geometry");
-    Pwn whitePawn(WHITE,"e2"), blackPawn(BLACK,"e7");
+    Pawn whitePawn(WHITE,"e2"), blackPawn(BLACK,"e7");
     check(whitePawn.canMove("e4")&&whitePawn.canMove("d3")&&blackPawn.canMove("e5"),"pawn geometry and direction");
     expectError(MOVE_INVALID_OUT_OF_BOUNDS,[&]{ rook.canMove("i4"); },"piece boundary validation");
 

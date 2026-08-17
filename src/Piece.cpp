@@ -1,5 +1,5 @@
-#include "Piece.h"
-#include "MoveException.h"
+#include "chess/Piece.h"
+#include "chess/MoveException.h"
 #include <ostream>
 #include <stdexcept>
 

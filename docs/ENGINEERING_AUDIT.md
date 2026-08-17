@@ -25,7 +25,7 @@ Audit performed on the repository state at the start of `codex/chess-engine-audi
 
 ## Structure decision
 
-The existing `Project1/` directory was retained. It is not an ideal modern name, but it contains a working Visual Studio solution and the bundled GUI, both of which are coupled to that location. A root CMake entry point and root `tests/` directory provide a clean portable workflow without a high-risk, low-value mass move. A future rename can be done alongside regenerated Visual Studio project metadata and Windows CI.
+The legacy `Project1/` directory was replaced after the initial audit with responsibility-based directories: `include/chess/` for the public core API, `src/` for portable implementation, `app/` for the Windows controller and IPC adapter, `visualstudio/` for IDE metadata, `gui/` for the supplied executable, and `docs/` and `tests/` for supporting material. CMake and Visual Studio references were updated together so both build paths consume the same source tree.
 
 ## Remaining manual validation
 

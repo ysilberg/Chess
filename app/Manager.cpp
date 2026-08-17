@@ -1,5 +1,5 @@
 #include "Manager.h"
-#include "MoveException.h"
+#include "chess/MoveException.h"
 #include <cstring>
 #include <iostream>
 

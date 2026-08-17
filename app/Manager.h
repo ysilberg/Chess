@@ -1,5 +1,5 @@
 #pragma once
-#include "Board.h"
+#include "chess/Board.h"
 #include "Pipe.h"
 #include <string>
 

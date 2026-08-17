@@ -57,23 +57,19 @@ Code `9` is reserved by the original protocol, but the current engine does not p
 
 ```text
 Chess-Project-Magshimim/
-├── CMakeLists.txt          # portable chess-core and test build
-├── Project1/               # Visual Studio project, engine, IPC, and GUI client
-│   ├── Project1.sln
-│   ├── Board.*
-│   ├── Manager.*
-│   ├── Piece.* and piece subclasses
-│   ├── MoveException.h
-│   ├── Pipe.h
-│   ├── Source.cpp
-│   └── chessGraphics.exe
-├── tests/
-│   └── test_chess.cpp
+├── app/                    # Windows entry point, controller, and named-pipe adapter
+├── include/chess/          # public chess-core headers
+├── src/                    # platform-independent chess-core implementation
+├── tests/                  # deterministic core tests
+├── visualstudio/           # Visual Studio solution and project files
+├── gui/                    # supplied prebuilt Windows GUI
+├── docs/                   # engineering audit and original UML image
+├── CMakeLists.txt          # portable core, tests, and Windows app build
 ├── LICENSE.md
 └── README.md
 ```
 
-The legacy `Project1/` directory is retained because the Visual Studio solution and bundled GUI reference that layout. The portable test target is defined at the repository root, so reorganizing every source file would add migration risk without materially improving the engine.
+The chess rules are isolated from the Windows integration. Consumers include headers from `include/chess/`; `src/` has no dependency on Win32 or the GUI. The `app/` layer depends on both the core and Windows APIs, while `visualstudio/` and the root CMake file provide two build entry points over the same sources.
 
 ## Build and test the chess core
 
@@ -97,11 +93,11 @@ Requirements:
 - Visual Studio 2022 with the **Desktop development with C++** workload;
 - a Windows 10/11 SDK.
 
-1. Open `Project1/Project1.sln` in Visual Studio.
+1. Open `visualstudio/Chess.sln` in Visual Studio.
 2. Select `Debug` or `Release` and an appropriate platform (`x64` is recommended).
 3. Build the solution.
-4. Start `Project1/chessGraphics.exe`, which hosts `\\.\pipe\chessPipe`.
-5. Run the built `Project1` console application. It connects to the GUI and processes moves until the GUI sends `quit`.
+4. Start `gui/chessGraphics.exe`, which hosts `\\.\pipe\chessPipe`.
+5. Run the built `Chess` console application. It connects to the GUI and processes moves until the GUI sends `quit`.
 
 The portable CMake build creates `chess_app` only on Windows. The GUI executable is prebuilt and is not compiled from source in this repository.
 
