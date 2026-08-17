@@ -1,5 +1,7 @@
 # Chess Project Magshimim
 
+[![CI](https://github.com/NRG-Wardog/Chess/actions/workflows/ci.yml/badge.svg)](https://github.com/NRG-Wardog/Chess/actions/workflows/ci.yml)
+
 A two-player C++ chess engine that validates moves and communicates with a supplied Windows GUI over a named pipe. The project was collaboratively developed by **Dorian Salomon and Yan Silberg** as part of the Magshimim program.
 
 This repository appears on GitHub as a fork because the original collaborative repository was hosted under Yan's account. It is not a third-party project: this repository preserves work created jointly by Dorian and Yan.
@@ -56,7 +58,7 @@ Code `9` is reserved by the original protocol, but the current engine does not p
 ## Repository layout
 
 ```text
-Chess-Project-Magshimim/
+Chess/
 ├── app/                    # Windows entry point, controller, and named-pipe adapter
 ├── include/chess/          # public chess-core headers
 ├── src/                    # platform-independent chess-core implementation
@@ -75,9 +77,9 @@ The chess rules are isolated from the Windows integration. Consumers include hea
 
 The core and test suite require a C++17 compiler and CMake 3.16 or newer. They are platform-independent.
 
-```powershell
-git clone https://github.com/NRG-Wardog/Chess-Project-Magshimim.git
-cd Chess-Project-Magshimim
+```bash
+git clone https://github.com/NRG-Wardog/Chess.git
+cd Chess
 cmake -S . -B build
 cmake --build build --config Release
 ctest --test-dir build -C Release --output-on-failure
@@ -101,13 +103,22 @@ Requirements:
 
 The portable CMake build creates `chess_app` only on Windows. The GUI executable is prebuilt and is not compiled from source in this repository.
 
+## Continuous integration
+
+GitHub Actions validates both supported build paths on every pull request and push to `main`:
+
+- **Linux / GCC:** configures the portable CMake project with C++17 and warnings as errors, builds the core and tests, then runs `ctest`.
+- **Windows / MSVC:** builds the core tests and Windows IPC application through CMake with warnings as errors, runs `ctest`, and separately builds `visualstudio/Chess.sln` to catch stale Visual Studio metadata.
+
+CI compiles the Windows pipe client but does not launch the supplied GUI. A full named-pipe handshake and interactive game still require manual validation on Windows.
+
 ## Error handling
 
 Expected move failures use `MoveException` so the controller can return the exact GUI status code. Malformed board data and impossible engine states use standard exceptions. Pipe operations report Win32 failures and return failure values; the startup path allows a connection retry.
 
 ## Tests
 
-`tests/test_chess.cpp` covers every piece's movement geometry, bounds checking, turn order, captures, friendly occupancy, sliding-piece obstruction, pawn occupancy rules, check detection, checking-move status, king safety, self-check prevention, and transactional rollback after a rejected move.
+`tests/test_chess.cpp` covers every piece's movement geometry, board parsing and serialization, malformed input, bounds checking, turn order and preservation, captures, friendly occupancy, sliding-piece obstruction, knight jumps, white and black pawn rules, check detection from multiple piece types, checking-move status, escaping check, king safety, self-check prevention, and transactional rollback of both quiet moves and captures.
 
 ## Known limitations
 
@@ -124,7 +135,7 @@ Expected move failures use `MoveException` so the controller can return the exac
 2. Add explicit move history to support castling, en passant, promotion, undo, and draw rules.
 3. Replace protocol exceptions with a typed move result internally while keeping the numeric adapter at the IPC boundary.
 4. Wrap the Win32 pipe in a smaller transport interface so `Manager` can be integration-tested with a fake connection.
-5. Add Windows CI for the Visual Studio target and portable CI for the chess-core tests.
+5. Add a mockable transport interface and integration tests for `Manager` without requiring the GUI process.
 
 ## License
 

@@ -1,8 +1,4 @@
-#ifndef ROOK_H
-#define ROOK_H
-
-#include <stdexcept>
-
+#pragma once
 #include "Piece.h"
 
 class Rook : public Piece {
@@ -13,8 +9,4 @@ public:
 
     bool canMove(const std::string& newPosition) const override;
     std::string getType() const override;
-
-
 };
-
-#endif // ROOK_H

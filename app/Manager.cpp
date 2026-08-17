@@ -1,6 +1,5 @@
 #include "Manager.h"
 #include "chess/MoveException.h"
-#include <cstring>
 #include <iostream>
 
 Manager::Manager(Pipe& pipe, const std::string& boardData) : _pipe(pipe), _board(boardData) {}

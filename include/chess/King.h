@@ -1,8 +1,4 @@
-#ifndef KING_H
-#define KING_H
-
-#include <stdexcept>
-
+#pragma once
 #include "Piece.h"
 
 class King : public Piece {
@@ -12,7 +8,4 @@ public:
     void move(const std::string& newPosition) override;
     bool canMove(const std::string& newPosition) const override;
     std::string getType() const override;
-
 };
-
-#endif // KING_H

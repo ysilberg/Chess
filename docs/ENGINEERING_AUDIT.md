@@ -29,4 +29,4 @@ The legacy `Project1/` directory was replaced after the initial audit with respo
 
 ## Remaining manual validation
 
-The chess core builds and passes its deterministic test executable with GCC using strict warnings plus AddressSanitizer and UndefinedBehaviorSanitizer. CMake was not installed in the audit environment. The Windows application, Visual Studio project, named-pipe handshake, and bundled GUI require a native Windows/Visual Studio run before release.
+The chess core builds and passes its deterministic test executable with GCC using strict warnings plus AddressSanitizer and UndefinedBehaviorSanitizer. GitHub Actions now validates the CMake targets on Linux and Windows and separately compiles the checked-in Visual Studio solution. The named-pipe handshake and interactive bundled GUI still require a native Windows run because CI does not launch the GUI process.

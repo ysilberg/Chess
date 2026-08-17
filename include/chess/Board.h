@@ -5,6 +5,7 @@
 #include <iosfwd>
 #include <memory>
 #include <string>
+#include <utility>
 
 class Board {
 public:
