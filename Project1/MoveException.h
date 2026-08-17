@@ -1,80 +1,20 @@
-#ifndef MOVE_EXCEPTION_H
-#define MOVE_EXCEPTION_H
+#pragma once
 #include <exception>
-#include <string>
 
+enum Status { MOVE_VALID=0, MOVE_VALID_CHECK=1, MOVE_INVALID_SOURCE_EMPTY=2,
+    MOVE_INVALID_TARGET_OCCUPIED=3, MOVE_INVALID_CAUSES_SELF_CHECK=4,
+    MOVE_INVALID_OUT_OF_BOUNDS=5, MOVE_INVALID_ILLEGAL_PIECE_MOVE=6,
+    MOVE_INVALID_IDENTICAL_SQUARES=7, MOVE_INVALID_TURN=8, MOVE_VALID_CHECKMATE=9 };
 
-enum Status {
-    MOVE_VALID,
-    MOVE_VALID_CHECK,
-    MOVE_INVALID_SOURCE_EMPTY,
-    MOVE_INVALID_TARGET_OCCUPIED,
-    MOVE_INVALID_CAUSES_SELF_CHECK,
-    MOVE_INVALID_OUT_OF_BOUNDS,
-    MOVE_INVALID_ILLEGAL_PIECE_MOVE,
-    MOVE_INVALID_IDENTICAL_SQUARES,
-    MOVE_INVALID_TURN,
-    MOVE_VALID_CHECKMATE,
-};
-
-
-#define MOVE_VALID_STR "0"
-#define MOVE_VALID_CHECK_STR "1"
-#define MOVE_INVALID_SOURCE_EMPTY_STR "2"
-#define MOVE_INVALID_TARGET_OCCUPIED_STR "3"
-#define MOVE_INVALID_CAUSES_SELF_CHECK_STR "4"
-#define MOVE_INVALID_OUT_OF_BOUNDS_STR "5"
-#define MOVE_INVALID_ILLEGAL_PIECE_MOVE_STR "6"
-#define MOVE_INVALID_IDENTICAL_SQUARES_STR "7"
-#define MOVE_INVALID_TURN_STR "8"
-#define MOVE_VALID_CHECKMATE_STR "9"
-#define UNKOWN_ERROR "Unknown move error."
-
-
-
-class MoveException : public std::exception
-{
-private:
-    Status _errorCode;        // Code for the specific error
-   
-
+class MoveException final : public std::exception {
 public:
-    // Constructor
-    MoveException(Status code): _errorCode(code)
-    {}
-
-    // Get the error code
-    Status getErrorCode() const {
-        return _errorCode;
-    }
-
-    // Override the what() method to provide an error message
+    explicit MoveException(Status code) noexcept : _errorCode(code) {}
+    Status getErrorCode() const noexcept { return _errorCode; }
     const char* what() const noexcept override {
-        switch (_errorCode) {
-        case MOVE_VALID:
-            return MOVE_VALID_STR;
-        case MOVE_VALID_CHECK:
-            return MOVE_VALID_CHECK_STR;
-        case MOVE_INVALID_SOURCE_EMPTY:
-            return MOVE_INVALID_SOURCE_EMPTY_STR;
-        case MOVE_INVALID_TARGET_OCCUPIED:
-            return MOVE_INVALID_TARGET_OCCUPIED_STR;
-        case MOVE_INVALID_CAUSES_SELF_CHECK:
-            return MOVE_INVALID_CAUSES_SELF_CHECK_STR;
-        case MOVE_INVALID_OUT_OF_BOUNDS:
-            return MOVE_INVALID_OUT_OF_BOUNDS_STR;
-        case MOVE_INVALID_ILLEGAL_PIECE_MOVE:
-            return MOVE_INVALID_ILLEGAL_PIECE_MOVE_STR;
-        case MOVE_INVALID_IDENTICAL_SQUARES:
-            return MOVE_INVALID_IDENTICAL_SQUARES_STR;
-        case MOVE_INVALID_TURN:
-            return MOVE_INVALID_TURN_STR;
-        case MOVE_VALID_CHECKMATE:
-            return MOVE_VALID_CHECKMATE_STR;
-        default:
-            return UNKOWN_ERROR;
-        }
+        static const char* messages[] = {"0","1","2","3","4","5","6","7","8","9"};
+        return _errorCode >= MOVE_VALID && _errorCode <= MOVE_VALID_CHECKMATE
+            ? messages[static_cast<int>(_errorCode)] : "Unknown move error.";
     }
+private:
+    Status _errorCode;
 };
-
-#endif // MOVE_EXCEPTION_H
