@@ -1,10 +1,10 @@
-#include "Board.h"
-#include "Bishop.h"
-#include "King.h"
-#include "Knight.h"
-#include "Pwn.h"
-#include "Queen.h"
-#include "Rook.h"
+#include "chess/Board.h"
+#include "chess/Bishop.h"
+#include "chess/King.h"
+#include "chess/Knight.h"
+#include "chess/Pawn.h"
+#include "chess/Queen.h"
+#include "chess/Rook.h"
 #include <cctype>
 #include <cstdlib>
 #include <ostream>
@@ -14,7 +14,7 @@ namespace {
 std::unique_ptr<Piece> makePiece(char symbol, const std::string& position) {
     const char color = std::isupper(static_cast<unsigned char>(symbol)) ? WHITE : BLACK;
     switch (std::tolower(static_cast<unsigned char>(symbol))) {
-        case 'p': return std::make_unique<Pwn>(color, position);
+        case 'p': return std::make_unique<Pawn>(color, position);
         case 'r': return std::make_unique<Rook>(color, position);
         case 'n': return std::make_unique<Knight>(color, position);
         case 'b': return std::make_unique<Bishop>(color, position);
@@ -71,7 +71,7 @@ bool Board::isPathClear(int fr, int fc, int tr, int tc) const {
 bool Board::isPseudoLegal(const Piece& piece, int tr, int tc, bool capture) const {
     const auto [fr,fc]=indices(piece.getPosition());
     const int dr=tr-fr, dc=tc-fc;
-    if (piece.getType()=="Pwn") {
+    if (piece.getType()=="Pawn") {
         const int direction=piece.getColor()==WHITE?1:-1;
         if (capture) return std::abs(dc)==1 && dr==direction;
         if (dc!=0) return false;

@@ -5,10 +5,10 @@
 
 #include "Piece.h"
 
-class Pwn : public Piece {
+class Pawn : public Piece {
 public:
     std::string pieceLogo;
-    Pwn(char col, const std::string& pos);
+    Pawn(char col, const std::string& pos);
 
     void move(const std::string& newPosition) override;
 
