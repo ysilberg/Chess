@@ -176,6 +176,30 @@ void testSelfCheckRollback() {
     check(captureRollback.toString() == beforeCapture, "capture rollback restores both pieces and turn");
     check(captureRollback.getSymbol("e2") && captureRollback.getSymbol("a2"), "capture rollback restores source and target occupancy");
 }
+
+void testTerminalGameStates() {
+    Board checkmate(position({{"f6", 'K'}, {"g7", 'Q'}, {"h8", 'k'}}, false));
+    check(checkmate.isCheck(BLACK), "checkmate position is check");
+    check(checkmate.isCheckmate(BLACK) && !checkmate.isStalemate(BLACK), "checkmate detection");
+
+    Board escapableCheck(position({{"f6", 'K'}, {"h1", 'R'}, {"h8", 'k'}}, false));
+    check(escapableCheck.isCheck(BLACK) && !escapableCheck.isCheckmate(BLACK), "check with escape is not checkmate");
+
+    Board stalemate(position({{"f7", 'K'}, {"g6", 'Q'}, {"h8", 'k'}}, false));
+    check(!stalemate.isCheck(BLACK), "stalemate position is not check");
+    check(stalemate.isStalemate(BLACK) && !stalemate.isCheckmate(BLACK), "stalemate detection");
+
+    Board ongoing(position({{"a1", 'K'}, {"h8", 'k'}}, false));
+    check(!ongoing.isCheckmate(BLACK) && !ongoing.isStalemate(BLACK), "available king move keeps game ongoing");
+
+    Board matingMove(position({{"f6", 'K'}, {"f7", 'Q'}, {"h8", 'k'}}));
+    check(matingMove.movePiece("f7", "g7") == MOVE_VALID_CHECKMATE, "mating move returns checkmate status");
+    check(matingMove.gameState() == GameState::Checkmate && !matingMove.whiteToMove(), "mating move records terminal state");
+
+    Board stalematingMove(position({{"f7", 'K'}, {"f5", 'Q'}, {"h8", 'k'}}));
+    check(stalematingMove.movePiece("f5", "g6") == MOVE_VALID, "stalemating move remains protocol-compatible");
+    check(stalematingMove.gameState() == GameState::Stalemate, "stalemating move records terminal state");
+}
 }
 
 int main() {
@@ -186,6 +210,7 @@ int main() {
     testPawnRules();
     testCheckAndKingSafety();
     testSelfCheckRollback();
+    testTerminalGameStates();
 
     if (failures != 0) {
         std::cerr << failures << " test(s) failed\n";

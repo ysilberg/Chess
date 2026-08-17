@@ -20,8 +20,8 @@ Audit performed on the repository state at the start of `codex/chess-engine-audi
 
 ## Verified rule status
 
-- Implemented and tested: normal movement for every piece, captures, friendly collision rejection, sliding obstruction, turns, coordinate validation, pawn home-rank double moves, check detection, moves giving check, king safety, and self-check prevention.
-- Not implemented: checkmate, stalemate, castling, en passant, promotion, repetition, fifty-move rule, insufficient-material draws, move history, undo, clocks, and AI.
+- Implemented and tested: normal movement for every piece, captures, friendly collision rejection, sliding obstruction, turns, coordinate validation, pawn home-rank double moves, check detection, checkmate, stalemate, moves giving check, king safety, and self-check prevention.
+- Not implemented: castling, en passant, promotion, repetition, fifty-move rule, insufficient-material draws, move history, undo, clocks, and AI.
 
 ## Structure decision
 
