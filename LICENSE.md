@@ -9,5 +9,5 @@ This software is the property of its author and is intended for educational and 
 
 For permissions or inquiries, please contact the author.
 
-© [2025] [Dorian and yan] – All Rights Reserved.
+Copyright Â© 2025 Dorian Salomon and Yan Silberg.
 
