@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/NRG-Wardog/Chess/actions/workflows/ci.yml/badge.svg)](https://github.com/NRG-Wardog/Chess/actions/workflows/ci.yml)
 
-A two-player C++ chess engine that validates moves and communicates with a supplied Windows GUI over a named pipe. The project was collaboratively developed by **Dorian Salomon and Yan Silberg** as part of the Magshimim program.
+A two-player C++ chess engine with deterministic game-state logic, check/checkmate/stalemate detection, Windows named-pipe IPC, CMake, automated tests, and Linux/Windows CI.
 
 This repository appears on GitHub as a fork because the original collaborative repository was hosted under Yan's account. It is not a third-party project: this repository preserves work created jointly by Dorian and Yan.
 
