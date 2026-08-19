@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core Sources"><UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier></Filter>
+    <Filter Include="Core Headers"><UniqueIdentifier>{93995380-89BD-4B04-88EB-625FBE52EBFB}</UniqueIdentifier></Filter>
+    <Filter Include="Windows App"><UniqueIdentifier>{67DA6AB6-F800-4C08-8B7A-83BB121AAD01}</UniqueIdentifier></Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\chess\Bishop.h"><Filter>Core Headers</Filter></ClInclude>
+    <ClInclude Include="..\include\chess\Board.h"><Filter>Core Headers</Filter></ClInclude>
+    <ClInclude Include="..\include\chess\King.h"><Filter>Core Headers</Filter></ClInclude>
+    <ClInclude Include="..\include\chess\Knight.h"><Filter>Core Headers</Filter></ClInclude>
+    <ClInclude Include="..\include\chess\MoveException.h"><Filter>Core Headers</Filter></ClInclude>
+    <ClInclude Include="..\include\chess\Piece.h"><Filter>Core Headers</Filter></ClInclude>
+    <ClInclude Include="..\include\chess\Pawn.h"><Filter>Core Headers</Filter></ClInclude>
+    <ClInclude Include="..\include\chess\Queen.h"><Filter>Core Headers</Filter></ClInclude>
+    <ClInclude Include="..\include\chess\Rook.h"><Filter>Core Headers</Filter></ClInclude>
+    <ClInclude Include="..\app\Manager.h"><Filter>Windows App</Filter></ClInclude>
+    <ClInclude Include="..\app\Pipe.h"><Filter>Windows App</Filter></ClInclude>
+    <ClInclude Include="..\app\targetver.h"><Filter>Windows App</Filter></ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Bishop.cpp"><Filter>Core Sources</Filter></ClCompile>
+    <ClCompile Include="..\src\Board.cpp"><Filter>Core Sources</Filter></ClCompile>
+    <ClCompile Include="..\src\King.cpp"><Filter>Core Sources</Filter></ClCompile>
+    <ClCompile Include="..\src\Knight.cpp"><Filter>Core Sources</Filter></ClCompile>
+    <ClCompile Include="..\src\Piece.cpp"><Filter>Core Sources</Filter></ClCompile>
+    <ClCompile Include="..\src\Pawn.cpp"><Filter>Core Sources</Filter></ClCompile>
+    <ClCompile Include="..\src\Queen.cpp"><Filter>Core Sources</Filter></ClCompile>
+    <ClCompile Include="..\src\Rook.cpp"><Filter>Core Sources</Filter></ClCompile>
+    <ClCompile Include="..\app\Manager.cpp"><Filter>Windows App</Filter></ClCompile>
+    <ClCompile Include="..\app\Source.cpp"><Filter>Windows App</Filter></ClCompile>
+    <ClCompile Include="..\app\stdafx.cpp"><Filter>Windows App</Filter></ClCompile>
+  </ItemGroup>
+</Project>
